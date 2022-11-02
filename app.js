@@ -13,6 +13,15 @@ const tweets = [
     { username: "bobesponja", tweet: "eu amo o hub" }
 ]
 
+function isValidUrl(url) {
+    let regex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
+    return regex.test(url)
+}
+
+function isValidTextField(inputText) {
+    return typeof inputText === "string"
+}
+
 
 app.get("/tweets", (req, res) => {
     const payload = []
@@ -20,16 +29,17 @@ app.get("/tweets", (req, res) => {
     if (page < 1) {
         res.status(400).send("Informe uma página válida!")
     } else {
-        const end = Math.min(tweets.length, (page * 10))
-        const start = end - 10
-        const tweetsWindow = tweets.slice(start, end)
-        console.log(tweetsWindow)
-        tweetsWindow.forEach((tweet) => {
-            const user = users.find((user) => user.username === tweet.username)
-            const avatar = user.avatar
-            tweet.avatar = avatar
-            payload.push(tweet)
-        })
+        if (tweets.length > ((page - 1) * 10)) {
+            const end = Math.min(tweets.length, (page * 10))
+            const start = end - 10
+            const tweetsWindow = tweets.slice(start, end)
+            tweetsWindow.forEach((tweet) => {
+                const user = users.find((user) => user.username === tweet.username)
+                const avatar = user.avatar
+                tweet.avatar = avatar
+                payload.push(tweet)
+            })
+        }
 
         res.send(payload)
     }
@@ -56,8 +66,8 @@ app.post("/tweets", (req, res) => {
     const body = req.body
     const username = req.headers['user']
     const entry = body
-    const hasTweet = body.tweet !== undefined
-    if (hasTweet) {
+    const hasValidTweet = (entry.tweet !== undefined) && isValidTextField(entry.tweet)
+    if (hasValidTweet) {
         entry.username = username
         tweets.push(entry)
         res.status(201).send("OK")
@@ -68,9 +78,9 @@ app.post("/tweets", (req, res) => {
 
 app.post("/sign-up", (req, res) => {
     const body = req.body
-    const hasUsername = body.username !== undefined
-    const hasAvatar = body.avatar !== undefined
-    if (hasUsername && hasAvatar) {
+    const hasValidUsername = (body.username !== undefined) && isValidTextField(body.username)
+    const hasValidAvatar = (body.avatar !== undefined) && isValidUrl(body.avatar)
+    if (hasValidUsername && hasValidAvatar) {
         users.push(body)
         res.status(201).send("OK")
     } else {
