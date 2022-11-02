@@ -55,13 +55,13 @@ app.get("/tweets/:username", (req, res) => {
 app.post("/tweets", (req, res) => {
     const body = req.body
     tweets.push(body)
-    res.send("OK")
+    res.status(201).send("OK")
 })
 
 app.post("/sign-up", (req, res) => {
     const body = req.body
     users.push(body)
-    res.send("OK")
+    res.status(201).send("OK")
 })
 
 app.listen(5000)
