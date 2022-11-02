@@ -26,6 +26,12 @@ app.get("/tweets", (req,res) => {
     res.send(payload)
 })
 
+app.post("/tweets", (req, res) => {
+    const body = req.body
+    tweets.push(body)
+    res.send("OK")
+})
+
 app.post("/sign-up", (req, res) => {
     const body = req.body
     users.push(body)
