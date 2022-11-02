@@ -54,7 +54,10 @@ app.get("/tweets/:username", (req, res) => {
 
 app.post("/tweets", (req, res) => {
     const body = req.body
-    tweets.push(body)
+    const username = req.headers['user']
+    const entry = body
+    entry.username = username
+    tweets.push(entry)
     res.status(201).send("OK")
 })
 
