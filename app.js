@@ -16,7 +16,15 @@ const tweets = [
 
 app.get("/tweets", (req,res) => {
     const payload = []
-    tweets.forEach((tweet) => {
+    const page = Number(req.query.page)
+    if(page<1){
+        res.status(400).send("Informe uma página válida!")
+    }else{
+        const end = Math.min(tweets.length, (page*10))
+        const start = end - 10
+        const tweetsWindow = tweets.slice(start, end)
+        console.log(tweetsWindow)
+        tweets.forEach((tweet) => {
         const user = users.find((user) => user.username === tweet.username)
         const avatar = user.avatar
         tweet.avatar = avatar 
@@ -24,6 +32,7 @@ app.get("/tweets", (req,res) => {
     })
 
     res.send(payload)
+    }
 })
 
 app.post("/tweets", (req, res) => {
