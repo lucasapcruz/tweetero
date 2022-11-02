@@ -65,11 +65,10 @@ app.get("/tweets/:username", (req, res) => {
 app.post("/tweets", (req, res) => {
     const body = req.body
     const username = req.headers['user']
-    const entry = body
-    const hasValidTweet = (entry.tweet !== undefined) && isValidTextField(entry.tweet)
+    const hasValidTweet = (body.tweet !== undefined) && isValidTextField(body.tweet)
     if (hasValidTweet) {
-        entry.username = username
-        tweets.push(entry)
+        body.username = username
+        tweets.push(body)
         res.status(201).send("OK")
     } else {
         res.status(400).send("Todos os campos são obrigatórios!")
