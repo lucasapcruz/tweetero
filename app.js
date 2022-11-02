@@ -35,6 +35,23 @@ app.get("/tweets", (req, res) => {
     }
 })
 
+app.get("/tweets/:username", (req, res) => {
+    const payload = []
+    const username = req.params.username
+
+    tweets.forEach((tweet) => {
+        if (tweet.username === username) {
+            const user = users.find((user) => user.username === tweet.username)
+            const avatar = user.avatar
+            tweet.avatar = avatar
+            payload.push(tweet)
+        }
+    })
+
+    res.send(payload)
+})
+
+
 app.post("/tweets", (req, res) => {
     const body = req.body
     tweets.push(body)
