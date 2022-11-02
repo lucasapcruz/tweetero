@@ -56,15 +56,26 @@ app.post("/tweets", (req, res) => {
     const body = req.body
     const username = req.headers['user']
     const entry = body
-    entry.username = username
-    tweets.push(entry)
-    res.status(201).send("OK")
+    const hasTweet = body.tweet !== undefined
+    if (hasTweet) {
+        entry.username = username
+        tweets.push(entry)
+        res.status(201).send("OK")
+    } else {
+        res.status(400).send("Todos os campos são obrigatórios!")
+    }
 })
 
 app.post("/sign-up", (req, res) => {
     const body = req.body
-    users.push(body)
-    res.status(201).send("OK")
+    const hasUsername = body.username !== undefined
+    const hasAvatar = body.avatar !== undefined
+    if (hasUsername && hasAvatar) {
+        users.push(body)
+        res.status(201).send("OK")
+    } else {
+        res.status(400).send("Todos os campos são obrigatórios!")
+    }
 })
 
 app.listen(5000)
