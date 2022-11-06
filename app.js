@@ -65,7 +65,7 @@ app.post("/tweets", (req, res) => {
     body.tweet !== undefined && isValidTextField(body.tweet);
   if (hasValidTweet) {
     body.username = username;
-    tweets.push(body);
+    tweets.unshift(body);
     res.status(201).send("OK");
   } else {
     res.status(400).send("Todos os campos são obrigatórios!");
